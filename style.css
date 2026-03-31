@@ -1,0 +1,100 @@
+/* General Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    scroll-behavior: smooth;
+}
+
+body {
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+/* Navbar */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 10%;
+    background: #222;
+    color: white;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.logo { font-size: 24px; font-weight: bold; }
+.logo span { color: #00d2ff; }
+.nav-links { display: flex; list-style: none; }
+.nav-links li { margin-left: 20px; }
+.nav-links a { color: white; text-decoration: none; transition: 0.3s; }
+.nav-links a:hover { color: #00d2ff; }
+
+/* Hero Section */
+.hero {
+    height: 100vh;
+    background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1498050108023-c5249f4df085');
+    background-size: cover;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: white;
+}
+
+.hero h1 { font-size: 4rem; }
+.hero h1 span { color: #00d2ff; }
+.btn {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 12px 30px;
+    background: #00d2ff;
+    color: white;
+    text-decoration: none;
+    border-radius: 25px;
+    transition: 0.3s;
+}
+.btn:hover { background: #0099cc; }
+
+/* Sections Styling */
+section { padding: 80px 10%; text-align: center; }
+h2 { font-size: 2.5rem; margin-bottom: 40px; position: relative; }
+h2::after {
+    content: '';
+    width: 50px; height: 4px; background: #00d2ff;
+    position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%);
+}
+
+/* Services Cards */
+.card-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+.card {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    transition: 0.3s;
+}
+.card:hover { transform: translateY(-10px); }
+
+/* Contact Form */
+#contact-form {
+    max-width: 600px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+}
+input, textarea {
+    width: 100%;
+    padding: 15px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+footer { background: #222; color: white; padding: 20px; text-align: center; }
