@@ -3,717 +3,798 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ToolsZy • Smart Calculators</title>
-<meta name="description" content="ToolsZy — Free, accurate calculators for EMI, FD, RD, Age, Discounts and more. No ads. No sign-up. Just results.">
+<title>ToolsZy • Smart Calculators — Free, Fast & Accurate</title>
+<link rel="icon" type="image/png" href="PNG/png.png">
+<link rel="shortcut icon" type="image/png" href="PNG/png.png">
+<link rel="apple-touch-icon" href="PNG/png.png">
+<meta name="description" content="ToolsZy — Free EMI, FD, RD, Age, Birthday Countdown & Discount calculators. No ads. No sign-up. Used by 10,000+ users. Instant accurate results.">
+<meta name="keywords" content="EMI calculator, FD calculator, RD calculator, age calculator, discount calculator, loan calculator, birthday countdown, free online calculators">
+<meta name="robots" content="index, follow">
+<meta property="og:title" content="ToolsZy • Smart Calculators">
+<meta property="og:description" content="Free, accurate, fast calculators for EMI, FD, RD, Age & more. No ads. No sign-up.">
+<meta property="og:type" content="website">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
 <style>
-/* ============================================
-   ROOT & RESET
-============================================ */
+/* ============================================================
+   ROOT VARIABLES — UNCHANGED DESIGN IDENTITY
+============================================================ */
 :root {
-  --bg:        #050d1f;
-  --bg2:       #071228;
-  --surface:   #0a1a35;
-  --surface2:  #0e2040;
-  --border:    rgba(0,234,255,0.1);
-  --border2:   rgba(255,255,255,0.06);
-  --cyan:      #00eaff;
-  --cyan-dim:  rgba(0,234,255,0.15);
-  --cyan-glow: rgba(0,234,255,0.3);
-  --violet:    #7c3aed;
-  --violet-dim:rgba(124,58,237,0.2);
-  --gold:      #f5a623;
-  --gold-dim:  rgba(245,166,35,0.15);
-  --text:      #e8f4ff;
-  --muted:     rgba(232,244,255,0.5);
-  --dim:       rgba(232,244,255,0.25);
-  --header-h:  68px;
-  --sidebar-w: 290px;
-  --radius:    16px;
-  --radius-sm: 10px;
-  --trans:     0.22s cubic-bezier(0.4,0,0.2,1);
+  --bg:         #050d1f;
+  --bg2:        #071228;
+  --surface:    #0a1a35;
+  --surface2:   #0e2040;
+  --border:     rgba(0,234,255,0.1);
+  --border2:    rgba(255,255,255,0.06);
+  --cyan:       #00eaff;
+  --cyan-dim:   rgba(0,234,255,0.12);
+  --cyan-glow:  rgba(0,234,255,0.28);
+  --violet:     #7c3aed;
+  --violet-dim: rgba(124,58,237,0.18);
+  --gold:       #f5a623;
+  --gold-dim:   rgba(245,166,35,0.13);
+  --green:      #22c55e;
+  --green-dim:  rgba(34,197,94,0.12);
+  --text:       #e8f4ff;
+  --muted:      rgba(232,244,255,0.5);
+  --dim:        rgba(232,244,255,0.22);
+  --header-h:   68px;
+  --sidebar-w:  290px;
+  --radius:     16px;
+  --radius-sm:  10px;
+  --trans:      0.22s cubic-bezier(0.4,0,0.2,1);
 }
 
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
-
-body {
-  font-family: 'Poppins', sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  min-height: 100vh;
-  overflow-x: hidden;
-  -webkit-font-smoothing: antialiased;
+/* ============================================================
+   RESET & BASE
+============================================================ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;font-size:16px}
+body{
+  font-family:'Poppins',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+  opacity:0;
+  transition:opacity .45s ease;
 }
+body.loaded{opacity:1}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;cursor:pointer;border:none;background:none}
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--surface2);border-radius:3px}
 
-a { color: inherit; text-decoration: none; }
-button { font-family: inherit; cursor: pointer; border: none; background: none; }
-
-::-webkit-scrollbar { width: 5px; }
-::-webkit-scrollbar-track { background: var(--bg); }
-::-webkit-scrollbar-thumb { background: var(--surface2); border-radius: 3px; }
-
-/* ============================================
-   AMBIENT BACKGROUND LAYER
-============================================ */
-.bg-canvas {
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  overflow: hidden;
+/* ============================================================
+   AMBIENT BACKGROUND — CSS-ONLY, ZERO JS
+============================================================ */
+.bg-canvas{
+  position:fixed;inset:0;z-index:0;
+  pointer-events:none;overflow:hidden;
+  will-change:transform;
 }
-
-/* Two soft orbs, CSS-only, no JS */
-.bg-orb {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(90px);
-  opacity: 0.18;
+.bg-orb{
+  position:absolute;border-radius:50%;
+  filter:blur(80px);opacity:.15;
+  will-change:transform;
 }
-.bg-orb-1 {
-  width: 700px; height: 700px;
-  background: radial-gradient(circle, #00eaff 0%, transparent 70%);
-  top: -200px; left: -200px;
-  animation: orbDrift 18s ease-in-out infinite alternate;
+.bg-orb-1{
+  width:650px;height:650px;
+  background:radial-gradient(circle,#00eaff 0%,transparent 70%);
+  top:-180px;left:-180px;
+  animation:orbDrift 20s ease-in-out infinite alternate;
 }
-.bg-orb-2 {
-  width: 600px; height: 600px;
-  background: radial-gradient(circle, #7c3aed 0%, transparent 70%);
-  bottom: -200px; right: -100px;
-  animation: orbDrift 22s ease-in-out infinite alternate-reverse;
+.bg-orb-2{
+  width:550px;height:550px;
+  background:radial-gradient(circle,#7c3aed 0%,transparent 70%);
+  bottom:-180px;right:-80px;
+  animation:orbDrift 26s ease-in-out infinite alternate-reverse;
 }
-
-@keyframes orbDrift {
-  from { transform: translate(0, 0); }
-  to   { transform: translate(60px, 40px); }
+@keyframes orbDrift{
+  from{transform:translate(0,0)}
+  to{transform:translate(50px,35px)}
 }
-
-/* Subtle grid lines */
-.bg-grid {
-  position: absolute;
-  inset: 0;
+.bg-grid{
+  position:absolute;inset:0;
   background-image:
-    linear-gradient(rgba(0,234,255,0.025) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0,234,255,0.025) 1px, transparent 1px);
-  background-size: 60px 60px;
+    linear-gradient(rgba(0,234,255,.022) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,234,255,.022) 1px,transparent 1px);
+  background-size:60px 60px;
+}
+/* Fixed 10 particles — pure CSS, no DOM spawning */
+.particles{position:absolute;inset:0;pointer-events:none}
+.p{position:absolute;font-size:18px;opacity:.07;animation:floatUp linear infinite}
+.p:nth-child(1){left:4%;animation-duration:16s;animation-delay:0s}
+.p:nth-child(2){left:13%;animation-duration:20s;animation-delay:4s;font-size:22px}
+.p:nth-child(3){left:23%;animation-duration:13s;animation-delay:1s;font-size:14px}
+.p:nth-child(4){left:34%;animation-duration:18s;animation-delay:6s;font-size:20px}
+.p:nth-child(5){left:45%;animation-duration:14s;animation-delay:2s}
+.p:nth-child(6){left:56%;animation-duration:22s;animation-delay:8s;font-size:20px}
+.p:nth-child(7){left:66%;animation-duration:11s;animation-delay:3s;font-size:24px}
+.p:nth-child(8){left:76%;animation-duration:19s;animation-delay:1s;font-size:14px}
+.p:nth-child(9){left:85%;animation-duration:15s;animation-delay:5s;font-size:20px}
+.p:nth-child(10){left:93%;animation-duration:12s;animation-delay:3s}
+@keyframes floatUp{
+  from{transform:translateY(110vh) rotate(0deg);opacity:.07}
+  85%{opacity:.07}
+  to{transform:translateY(-15vh) rotate(360deg);opacity:0}
 }
 
-/* Floating emoji particles — optimized: pure CSS, no JS spawn */
-.particles { position: absolute; inset: 0; }
-.p { position: absolute; font-size: 18px; opacity: 0.08; animation: floatUp linear infinite; }
-.p:nth-child(1)  { left:5%;   animation-duration:14s; animation-delay:0s;    font-size:16px; }
-.p:nth-child(2)  { left:12%;  animation-duration:18s; animation-delay:3s;    font-size:22px; }
-.p:nth-child(3)  { left:22%;  animation-duration:11s; animation-delay:1s;    font-size:14px; }
-.p:nth-child(4)  { left:33%;  animation-duration:16s; animation-delay:5s;    font-size:20px; }
-.p:nth-child(5)  { left:44%;  animation-duration:13s; animation-delay:2s;    font-size:16px; }
-.p:nth-child(6)  { left:55%;  animation-duration:19s; animation-delay:7s;    font-size:18px; }
-.p:nth-child(7)  { left:65%;  animation-duration:12s; animation-delay:4s;    font-size:24px; }
-.p:nth-child(8)  { left:75%;  animation-duration:17s; animation-delay:1s;    font-size:14px; }
-.p:nth-child(9)  { left:84%;  animation-duration:15s; animation-delay:6s;    font-size:20px; }
-.p:nth-child(10) { left:93%;  animation-duration:10s; animation-delay:3s;    font-size:16px; }
-
-@keyframes floatUp {
-  from { transform: translateY(110vh) rotate(0deg); opacity: 0.08; }
-  80%  { opacity: 0.08; }
-  to   { transform: translateY(-15vh) rotate(360deg); opacity: 0; }
-}
-
-/* ============================================
+/* ============================================================
    HEADER
-============================================ */
-header {
-  position: fixed;
-  top: 0; left: 0; right: 0;
-  height: var(--header-h);
-  background: rgba(5,13,31,0.7);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border-bottom: 1px solid var(--border2);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 20px 0 16px;
-  z-index: 1000;
+============================================================ */
+header{
+  position:fixed;top:0;left:0;right:0;
+  height:var(--header-h);
+  background:rgba(5,13,31,.72);
+  backdrop-filter:blur(22px);
+  -webkit-backdrop-filter:blur(22px);
+  border-bottom:1px solid var(--border2);
+  display:flex;align-items:center;
+  justify-content:space-between;
+  padding:0 20px 0 16px;
+  z-index:1000;
 }
+.logo{
+  display:flex;align-items:center;gap:10px;
+  font-size:1.2rem;font-weight:800;
+  letter-spacing:-.01em;user-select:none;
+}
+.logo-badge{
+  width:36px;height:36px;border-radius:10px;
+  background:linear-gradient(135deg,var(--cyan),var(--violet));
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;font-weight:900;color:#fff;
+  box-shadow:0 0 16px var(--cyan-glow);
+  flex-shrink:0;
+}
+.logo-text span{color:var(--cyan)}
+.header-right{display:flex;align-items:center;gap:10px}
+.btn-coffee-sm{
+  display:flex;align-items:center;gap:6px;
+  padding:7px 13px;border-radius:8px;
+  border:1px solid rgba(245,166,35,.3);
+  background:var(--gold-dim);color:var(--gold);
+  font-size:.75rem;font-weight:600;
+  transition:var(--trans);white-space:nowrap;
+}
+.btn-coffee-sm:hover{
+  background:rgba(245,166,35,.22);
+  transform:translateY(-1px);
+  box-shadow:0 4px 16px rgba(245,166,35,.22);
+}
+#hamburger{
+  width:42px;height:42px;border-radius:9px;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:5px;
+  transition:var(--trans);flex-shrink:0;
+}
+#hamburger:hover{background:rgba(255,255,255,.05)}
+.h-line{
+  display:block;width:20px;height:1.5px;
+  background:var(--text);border-radius:2px;
+  transition:var(--trans);transform-origin:center;
+}
+body.open #hamburger .h-line:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+body.open #hamburger .h-line:nth-child(2){opacity:0;transform:scaleX(0)}
+body.open #hamburger .h-line:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
 
-/* Logo */
-.logo {
-  display: flex; align-items: center; gap: 10px;
-  font-size: 1.2rem; font-weight: 800; letter-spacing: -0.01em;
-  user-select: none;
-}
-.logo-badge {
-  width: 36px; height: 36px;
-  border-radius: 10px;
-  background: linear-gradient(135deg, var(--cyan), var(--violet));
-  display: flex; align-items: center; justify-content: center;
-  font-size: 13px; font-weight: 900;
-  color: #fff;
-  box-shadow: 0 0 18px var(--cyan-glow);
-  flex-shrink: 0;
-}
-.logo-text { color: var(--text); }
-.logo-text span { color: var(--cyan); }
-
-/* Header right */
-.header-right { display: flex; align-items: center; gap: 10px; }
-
-/* Coffee button in header */
-.btn-coffee-sm {
-  display: flex; align-items: center; gap: 6px;
-  padding: 7px 13px;
-  border-radius: 8px;
-  border: 1px solid rgba(245,166,35,0.3);
-  background: var(--gold-dim);
-  color: var(--gold);
-  font-size: 0.75rem;
-  font-weight: 600;
-  transition: var(--trans);
-  white-space: nowrap;
-}
-.btn-coffee-sm:hover {
-  background: rgba(245,166,35,0.25);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 16px rgba(245,166,35,0.25);
-}
-
-/* Hamburger */
-#hamburger {
-  width: 42px; height: 42px;
-  border-radius: 9px;
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center; gap: 5px;
-  transition: var(--trans);
-  flex-shrink: 0;
-}
-#hamburger:hover { background: rgba(255,255,255,0.05); }
-.h-line {
-  display: block; width: 20px; height: 1.5px;
-  background: var(--text);
-  border-radius: 2px;
-  transition: var(--trans);
-  transform-origin: center;
-}
-body.open #hamburger .h-line:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
-body.open #hamburger .h-line:nth-child(2) { opacity: 0; transform: scaleX(0); }
-body.open #hamburger .h-line:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
-
-/* ============================================
+/* ============================================================
    SIDEBAR + OVERLAY
-============================================ */
-#overlay {
-  display: none; position: fixed; inset: 0;
-  background: rgba(0,0,0,0.55);
-  backdrop-filter: blur(5px);
-  z-index: 900;
-  opacity: 0; transition: opacity var(--trans);
+============================================================ */
+#overlay{
+  display:none;position:fixed;inset:0;
+  background:rgba(0,0,0,.55);
+  backdrop-filter:blur(5px);
+  z-index:900;opacity:0;transition:opacity var(--trans);
 }
-body.open #overlay { display: block; opacity: 1; }
-
-#sidebar {
-  position: fixed;
-  top: 0; left: 0;
-  width: var(--sidebar-w);
-  height: 100vh;
-  background: linear-gradient(160deg, #060f22, #080e1f);
-  border-right: 1px solid var(--border);
-  z-index: 950;
-  transform: translateX(-100%);
-  transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
-  overflow-y: auto;
-  padding: 0 0 32px;
-  display: flex; flex-direction: column;
+body.open #overlay{display:block;opacity:1}
+#sidebar{
+  position:fixed;top:0;left:0;
+  width:var(--sidebar-w);height:100vh;
+  background:linear-gradient(160deg,#060f22,#080e1f);
+  border-right:1px solid var(--border);
+  z-index:950;
+  transform:translateX(-100%);
+  transition:transform .35s cubic-bezier(.4,0,.2,1);
+  overflow-y:auto;
+  display:flex;flex-direction:column;
 }
-body.open #sidebar { transform: translateX(0); }
-
-.sidebar-logo {
-  display: flex; align-items: center; gap: 10px;
-  padding: 22px 22px 20px;
-  border-bottom: 1px solid var(--border2);
-  font-size: 1.1rem; font-weight: 800;
+body.open #sidebar{transform:translateX(0)}
+.sidebar-logo{
+  display:flex;align-items:center;gap:10px;
+  padding:22px 22px 20px;
+  border-bottom:1px solid var(--border2);
+  font-size:1.1rem;font-weight:800;
+  flex-shrink:0;
 }
-
-.sidebar-section {
-  font-size: 0.62rem; font-weight: 700;
-  text-transform: uppercase; letter-spacing: 0.12em;
-  color: var(--dim);
-  padding: 20px 22px 8px;
+.sidebar-section{
+  font-size:.62rem;font-weight:700;
+  text-transform:uppercase;letter-spacing:.12em;
+  color:var(--dim);padding:18px 22px 7px;
 }
-
-.sidebar-link {
-  display: flex; align-items: center; gap: 12px;
-  padding: 11px 22px;
-  font-size: 0.88rem;
-  color: var(--muted);
-  transition: var(--trans);
-  cursor: pointer;
-  border-left: 3px solid transparent;
+.sidebar-link{
+  display:flex;align-items:center;gap:12px;
+  padding:11px 22px;font-size:.88rem;
+  color:var(--muted);transition:var(--trans);
+  cursor:pointer;border-left:3px solid transparent;
 }
-.sidebar-link:hover {
-  color: var(--text);
-  background: rgba(0,234,255,0.05);
-  border-left-color: var(--cyan);
+.sidebar-link:hover{
+  color:var(--text);background:rgba(0,234,255,.05);
+  border-left-color:var(--cyan);
 }
-.sidebar-link .sl-icon { font-size: 17px; width: 22px; text-align: center; }
-
-/* Social in sidebar */
-.sidebar-social {
-  margin-top: auto;
-  padding: 20px 22px 0;
-  border-top: 1px solid var(--border2);
+.sl-icon{font-size:17px;width:22px;text-align:center}
+.sidebar-social{
+  margin-top:auto;padding:20px 22px 24px;
+  border-top:1px solid var(--border2);
+  flex-shrink:0;
 }
-.sidebar-social p { font-size: 0.7rem; color: var(--dim); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.1em; }
-.sidebar-socials { display: flex; gap: 10px; flex-wrap: wrap; }
-.ss-btn {
-  display: flex; align-items: center; justify-content: center;
-  width: 38px; height: 38px;
-  border-radius: 9px;
-  border: 1px solid var(--border2);
-  background: var(--surface);
-  font-size: 17px;
-  transition: var(--trans);
-  cursor: pointer;
+.sidebar-social p{
+  font-size:.68rem;color:var(--dim);
+  margin-bottom:12px;text-transform:uppercase;letter-spacing:.1em;
 }
-.ss-btn:hover { border-color: var(--cyan); background: var(--cyan-dim); transform: translateY(-2px); }
-
-/* ============================================
-   PAGE WRAPPER
-============================================ */
-.wrap { position: relative; z-index: 1; padding-top: var(--header-h); }
-
-/* ============================================
-   HERO
-============================================ */
-.hero {
-  min-height: calc(90vh - var(--header-h));
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  text-align: center;
-  padding: 60px 20px 40px;
+.sidebar-socials{display:flex;gap:9px;flex-wrap:wrap}
+.ss-btn{
+  display:flex;align-items:center;justify-content:center;
+  width:38px;height:38px;border-radius:9px;
+  border:1px solid var(--border2);
+  background:var(--surface);font-size:16px;
+  transition:var(--trans);cursor:pointer;
+  text-decoration:none;
 }
+.ss-btn:hover{border-color:var(--cyan);background:var(--cyan-dim);transform:translateY(-2px)}
 
-/* Entry animations */
-.hero-badge { animation: fadeUp 0.6s ease both; }
-.hero-title { animation: fadeUp 0.6s 0.1s ease both; }
-.hero-sub   { animation: fadeUp 0.6s 0.2s ease both; }
-.hero-tags  { animation: fadeUp 0.6s 0.3s ease both; }
-.hero-ctas  { animation: fadeUp 0.6s 0.4s ease both; }
-.hero-stats { animation: fadeUp 0.6s 0.5s ease both; }
-
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(24px); }
-  to   { opacity: 1; transform: translateY(0); }
+/* ============================================================
+   PROMO STRIP — NEW ADDITION
+============================================================ */
+.promo-strip{
+  position:relative;z-index:2;
+  background:linear-gradient(90deg,rgba(0,234,255,.07),rgba(124,58,237,.07),rgba(0,234,255,.07));
+  border-bottom:1px solid var(--border);
+  padding:10px 20px;
+  text-align:center;
+  margin-top:var(--header-h);
+}
+.promo-strip-inner{
+  display:flex;align-items:center;justify-content:center;
+  gap:10px;flex-wrap:wrap;
+  font-size:.78rem;color:var(--muted);
+  max-width:900px;margin:0 auto;
+}
+.promo-strip-text{font-weight:500}
+.promo-strip a{
+  color:var(--cyan);font-weight:600;
+  border-bottom:1px solid rgba(0,234,255,.3);
+  transition:var(--trans);padding-bottom:1px;
+}
+.promo-strip a:hover{border-bottom-color:var(--cyan)}
+.promo-pill{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:3px 10px;border-radius:100px;
+  border:1px solid var(--border);
+  background:rgba(0,234,255,.07);
+  font-size:.7rem;font-weight:600;color:var(--cyan);
 }
 
-.hero-badge {
-  display: inline-flex; align-items: center; gap: 7px;
-  padding: 6px 16px;
-  border-radius: 100px;
-  border: 1px solid var(--border);
-  background: var(--cyan-dim);
-  font-size: 0.72rem; font-weight: 600;
-  color: var(--cyan);
-  margin-bottom: 22px;
-  letter-spacing: 0.04em;
-}
-.badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--cyan);
-  box-shadow: 0 0 8px var(--cyan); animation: pulse 2s ease-in-out infinite; }
-@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+/* ============================================================
+   WRAP
+============================================================ */
+.wrap{position:relative;z-index:1}
 
-.hero-title {
-  font-size: clamp(2.2rem, 6vw, 4rem);
-  font-weight: 900;
-  line-height: 1.12;
-  letter-spacing: -0.03em;
-  margin-bottom: 18px;
+/* ============================================================
+   HERO — ORIGINAL PRESERVED + ENHANCEMENTS
+============================================================ */
+.hero{
+  min-height:calc(88vh - var(--header-h));
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  text-align:center;
+  padding:50px 20px 36px;
 }
-.hero-title .line2 {
-  background: linear-gradient(90deg, var(--cyan), var(--violet));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+.hero-badge{animation:fadeUp .6s ease both}
+.hero-title{animation:fadeUp .6s .08s ease both}
+.hero-sub{animation:fadeUp .6s .16s ease both}
+.hero-trust-tags{animation:fadeUp .6s .22s ease both}
+.hero-tags{animation:fadeUp .6s .28s ease both}
+.hero-ctas{animation:fadeUp .6s .36s ease both}
+.hero-stats{animation:fadeUp .6s .44s ease both}
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(22px)}
+  to{opacity:1;transform:translateY(0)}
 }
-
-.hero-sub {
-  font-size: clamp(0.92rem, 2vw, 1.05rem);
-  color: var(--muted);
-  max-width: 500px;
-  margin: 0 auto 24px;
-  line-height: 1.7;
-  font-weight: 300;
+.hero-badge{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:6px 16px;border-radius:100px;
+  border:1px solid var(--border);
+  background:var(--cyan-dim);
+  font-size:.72rem;font-weight:600;color:var(--cyan);
+  margin-bottom:20px;letter-spacing:.04em;
 }
-
-.hero-tags {
-  display: flex; flex-wrap: wrap; justify-content: center; gap: 8px;
-  margin-bottom: 34px;
+.badge-dot{
+  width:6px;height:6px;border-radius:50%;
+  background:var(--cyan);box-shadow:0 0 7px var(--cyan);
+  animation:pulse 2s ease-in-out infinite;
 }
-.hero-tag {
-  padding: 5px 13px;
-  border-radius: 100px;
-  border: 1px solid var(--border2);
-  background: var(--surface);
-  font-size: 0.72rem; color: var(--muted);
-  font-weight: 500;
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+.hero-title{
+  font-size:clamp(2.1rem,5.5vw,3.8rem);
+  font-weight:900;line-height:1.12;
+  letter-spacing:-.03em;margin-bottom:16px;
 }
-
-.hero-ctas {
-  display: flex; flex-wrap: wrap; gap: 12px; justify-content: center;
-  margin-bottom: 52px;
+.hero-title .line2{
+  background:linear-gradient(90deg,var(--cyan),var(--violet));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
 }
-
-.btn-primary {
-  padding: 14px 30px;
-  border-radius: 12px;
-  background: linear-gradient(135deg, var(--cyan), #0095cc);
-  color: #000;
-  font-size: 0.92rem; font-weight: 700;
-  transition: var(--trans);
-  box-shadow: 0 0 0 0 var(--cyan-glow);
-  letter-spacing: 0.01em;
-}
-.btn-primary:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 32px var(--cyan-glow);
-}
-.btn-primary:active { transform: translateY(0); }
-
-.btn-outline {
-  padding: 14px 30px;
-  border-radius: 12px;
-  border: 1px solid var(--border);
-  background: transparent;
-  color: var(--text);
-  font-size: 0.92rem; font-weight: 600;
-  transition: var(--trans);
-}
-.btn-outline:hover { border-color: var(--cyan); color: var(--cyan); transform: translateY(-2px); }
-
-/* Stats strip */
-.hero-stats {
-  display: flex; gap: 0;
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  background: rgba(10,26,53,0.6);
-  backdrop-filter: blur(12px);
-  overflow: hidden;
-  max-width: 480px;
-  width: 100%;
-}
-.hs-item {
-  flex: 1; padding: 16px 10px; text-align: center;
-  border-right: 1px solid var(--border2);
-}
-.hs-item:last-child { border-right: none; }
-.hs-num { font-size: 1.4rem; font-weight: 800; color: var(--cyan); line-height: 1; }
-.hs-lbl { font-size: 0.65rem; color: var(--muted); margin-top: 3px; }
-
-/* ============================================
-   TOOLS SECTION
-============================================ */
-.tools-section {
-  padding: 60px 20px 80px;
-  max-width: 960px;
-  margin: 0 auto;
+.hero-sub{
+  font-size:clamp(.9rem,1.8vw,1.02rem);
+  color:var(--muted);max-width:480px;
+  margin:0 auto 16px;line-height:1.7;font-weight:300;
 }
 
-.sec-header { text-align: center; margin-bottom: 40px; }
-.sec-header h2 {
-  font-size: clamp(1.5rem, 3vw, 2.2rem);
-  font-weight: 800; letter-spacing: -0.025em;
-  margin-bottom: 8px;
+/* Trust micro-line below sub — NEW */
+.hero-trust-tags{
+  display:flex;flex-wrap:wrap;justify-content:center;gap:6px;
+  margin-bottom:20px;
 }
-.sec-header p { font-size: 0.88rem; color: var(--muted); }
-
-.tool-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
-  gap: 14px;
+.trust-micro{
+  display:inline-flex;align-items:center;gap:4px;
+  font-size:.68rem;color:var(--dim);font-weight:500;
 }
-
-.tool-card {
-  background: linear-gradient(145deg, var(--surface), var(--surface2));
-  border: 1px solid var(--border2);
-  border-radius: var(--radius);
-  padding: 22px 18px;
-  cursor: pointer;
-  transition: var(--trans);
-  position: relative;
-  overflow: hidden;
-  display: flex; flex-direction: column; align-items: flex-start;
-  gap: 10px;
-}
-.tool-card::before {
-  content: '';
-  position: absolute; inset: 0;
-  background: linear-gradient(135deg, rgba(0,234,255,0.06), transparent 60%);
-  opacity: 0; transition: var(--trans);
-}
-.tool-card:hover {
-  border-color: rgba(0,234,255,0.25);
-  transform: translateY(-4px);
-  box-shadow: 0 8px 32px rgba(0,0,0,0.4), 0 0 0 1px rgba(0,234,255,0.1);
-}
-.tool-card:hover::before { opacity: 1; }
-
-.tc-icon {
-  width: 42px; height: 42px;
-  border-radius: 10px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 20px;
-  flex-shrink: 0;
-}
-.ic-cyan   { background: var(--cyan-dim); }
-.ic-violet { background: var(--violet-dim); }
-.ic-gold   { background: var(--gold-dim); }
-
-.tc-name { font-size: 0.88rem; font-weight: 600; line-height: 1.3; }
-.tc-desc { font-size: 0.72rem; color: var(--muted); line-height: 1.4; }
-
-.tc-arrow {
-  position: absolute; top: 18px; right: 16px;
-  font-size: 13px; color: var(--dim);
-  transition: var(--trans);
-}
-.tool-card:hover .tc-arrow { color: var(--cyan); transform: translate(2px,-2px); }
-
-/* Reveal animation on scroll */
-.reveal { opacity: 0; transform: translateY(30px); transition: 0.6s ease; }
-.reveal.visible { opacity: 1; transform: translateY(0); }
-
-/* ============================================
-   CONNECT WITH US (SOCIAL SECTION)
-============================================ */
-.social-section {
-  padding: 0 20px 80px;
-  max-width: 960px;
-  margin: 0 auto;
+.trust-micro .tm-dot{
+  width:5px;height:5px;border-radius:50%;
+  background:var(--green);
+  box-shadow:0 0 5px rgba(34,197,94,.6);
+  flex-shrink:0;
 }
 
-.social-box {
-  background: linear-gradient(145deg, var(--surface), var(--surface2));
-  border: 1px solid var(--border);
-  border-radius: 20px;
-  padding: 40px 36px;
-  text-align: center;
-  position: relative;
-  overflow: hidden;
+.hero-tags{
+  display:flex;flex-wrap:wrap;justify-content:center;gap:8px;
+  margin-bottom:30px;
 }
-.social-box::before {
-  content: '';
-  position: absolute; top: 0; left: 50%; transform: translateX(-50%);
-  width: 300px; height: 2px;
-  background: linear-gradient(90deg, transparent, var(--cyan), var(--violet), transparent);
+.hero-tag{
+  padding:5px 13px;border-radius:100px;
+  border:1px solid var(--border2);
+  background:var(--surface);
+  font-size:.72rem;color:var(--muted);font-weight:500;
+}
+.hero-ctas{
+  display:flex;flex-wrap:wrap;gap:12px;justify-content:center;
+  margin-bottom:44px;
+}
+.btn-primary{
+  padding:14px 30px;border-radius:12px;
+  background:linear-gradient(135deg,var(--cyan),#0095cc);
+  color:#000;font-size:.92rem;font-weight:700;
+  transition:var(--trans);
+  box-shadow:0 0 0 0 var(--cyan-glow);
+}
+.btn-primary:hover{
+  transform:translateY(-3px);
+  box-shadow:0 8px 28px var(--cyan-glow);
+  filter:brightness(1.06);
+}
+.btn-primary:active{transform:translateY(0)}
+.btn-outline{
+  padding:14px 30px;border-radius:12px;
+  border:1px solid var(--border);
+  background:transparent;
+  color:var(--text);font-size:.92rem;font-weight:600;
+  transition:var(--trans);
+}
+.btn-outline:hover{border-color:var(--cyan);color:var(--cyan);transform:translateY(-2px)}
+.hero-stats{
+  display:flex;gap:0;
+  border:1px solid var(--border);border-radius:14px;
+  background:rgba(10,26,53,.62);
+  backdrop-filter:blur(12px);
+  overflow:hidden;max-width:480px;width:100%;
+}
+.hs-item{
+  flex:1;padding:15px 8px;text-align:center;
+  border-right:1px solid var(--border2);
+}
+.hs-item:last-child{border-right:none}
+.hs-num{
+  font-size:1.35rem;font-weight:800;
+  color:var(--cyan);line-height:1;
+}
+.hs-lbl{font-size:.63rem;color:var(--muted);margin-top:3px}
+
+/* ============================================================
+   TOOLS SECTION — ORIGINAL PRESERVED
+============================================================ */
+.tools-section{
+  padding:56px 20px 72px;
+  max-width:960px;margin:0 auto;
+}
+.sec-header{text-align:center;margin-bottom:36px}
+.sec-header h2{
+  font-size:clamp(1.45rem,2.8vw,2.1rem);
+  font-weight:800;letter-spacing:-.025em;margin-bottom:7px;
+}
+.sec-header p{font-size:.86rem;color:var(--muted)}
+.tool-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(175px,1fr));
+  gap:13px;
+}
+.tool-card{
+  background:linear-gradient(145deg,var(--surface),var(--surface2));
+  border:1px solid var(--border2);
+  border-radius:var(--radius);
+  padding:22px 18px;cursor:pointer;
+  transition:var(--trans);position:relative;
+  overflow:hidden;
+  display:flex;flex-direction:column;align-items:flex-start;gap:9px;
+}
+.tool-card::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(0,234,255,.055),transparent 60%);
+  opacity:0;transition:var(--trans);
+}
+.tool-card:hover{
+  border-color:rgba(0,234,255,.22);
+  transform:translateY(-4px);
+  box-shadow:0 8px 28px rgba(0,0,0,.38),0 0 0 1px rgba(0,234,255,.09);
+}
+.tool-card:hover::before{opacity:1}
+.tc-icon{
+  width:42px;height:42px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;flex-shrink:0;
+}
+.ic-cyan{background:var(--cyan-dim)}
+.ic-violet{background:var(--violet-dim)}
+.ic-gold{background:var(--gold-dim)}
+.tc-name{font-size:.87rem;font-weight:600;line-height:1.3}
+.tc-desc{font-size:.71rem;color:var(--muted);line-height:1.4}
+.tc-arrow{
+  position:absolute;top:18px;right:16px;
+  font-size:13px;color:var(--dim);transition:var(--trans);
+}
+.tool-card:hover .tc-arrow{color:var(--cyan);transform:translate(2px,-2px)}
+
+/* ============================================================
+   AFFILIATE RECOMMENDATION BLOCKS — NEW
+============================================================ */
+.aff-section{
+  padding:0 20px 60px;
+  max-width:960px;margin:0 auto;
+}
+.aff-header{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:16px;flex-wrap:wrap;gap:8px;
+}
+.aff-header h3{
+  font-size:1rem;font-weight:700;letter-spacing:-.01em;
+}
+.aff-header-note{
+  font-size:.68rem;color:var(--dim);
+  font-style:italic;
+}
+.aff-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+  gap:12px;margin-bottom:10px;
+}
+.aff-card{
+  background:linear-gradient(145deg,var(--surface),var(--surface2));
+  border:1px solid var(--border2);
+  border-radius:var(--radius-sm);
+  padding:18px;
+  transition:var(--trans);
+  position:relative;overflow:hidden;
+  display:flex;flex-direction:column;gap:8px;
+}
+.aff-card::before{
+  content:'';position:absolute;inset:0;
+  border-radius:var(--radius-sm);
+  background:linear-gradient(135deg,rgba(0,234,255,.04),transparent);
+  opacity:0;transition:var(--trans);
+}
+.aff-card:hover{
+  border-color:rgba(0,234,255,.18);
+  transform:translateY(-3px);
+  box-shadow:0 6px 22px rgba(0,0,0,.32);
+}
+.aff-card:hover::before{opacity:1}
+.aff-card-top{display:flex;align-items:center;gap:11px}
+.aff-logo{
+  width:38px;height:38px;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;flex-shrink:0;
+  background:var(--surface2);border:1px solid var(--border2);
+}
+.aff-name{font-size:.88rem;font-weight:700}
+.aff-rate{
+  font-size:.7rem;color:var(--cyan);font-weight:600;
+}
+.aff-benefit{font-size:.73rem;color:var(--muted);line-height:1.5}
+.btn-aff{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:8px 14px;border-radius:8px;
+  border:1px solid var(--border);
+  background:rgba(0,234,255,.07);
+  color:var(--cyan);font-size:.76rem;font-weight:600;
+  transition:var(--trans);align-self:flex-start;
+  margin-top:2px;
+}
+.btn-aff:hover{
+  background:rgba(0,234,255,.14);
+  border-color:rgba(0,234,255,.3);
+  transform:translateX(2px);
+}
+.aff-disclaimer{
+  font-size:.65rem;color:var(--dim);
+  padding:8px 2px 0;
+  display:flex;align-items:center;gap:5px;
+}
+.aff-disclaimer::before{content:'ⓘ';font-size:.7rem}
+
+/* Shopping affiliate variant */
+.aff-card.shop .aff-logo{font-size:22px}
+.aff-card.shop .btn-aff{
+  background:var(--gold-dim);
+  border-color:rgba(245,166,35,.25);
+  color:var(--gold);
+}
+.aff-card.shop .btn-aff:hover{background:rgba(245,166,35,.2)}
+
+/* ============================================================
+   PREMIUM SUPPORT / COFFEE SECTION — UPGRADED
+============================================================ */
+.coffee-section{
+  padding:0 20px 72px;
+  max-width:960px;margin:0 auto;
+}
+.coffee-card{
+  background:linear-gradient(135deg,#130c00,#1c1000,#130c00);
+  border:1px solid rgba(245,166,35,.22);
+  border-radius:20px;padding:38px 36px;
+  display:flex;gap:28px;align-items:center;
+  position:relative;overflow:hidden;
+}
+.coffee-card::before{
+  content:'';
+  position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+}
+.coffee-glow{
+  position:absolute;right:-60px;top:-60px;
+  width:220px;height:220px;border-radius:50%;
+  background:radial-gradient(circle,rgba(245,166,35,.15) 0%,transparent 70%);
+  pointer-events:none;
+}
+.coffee-glow-left{
+  position:absolute;left:-40px;bottom:-40px;
+  width:160px;height:160px;border-radius:50%;
+  background:radial-gradient(circle,rgba(245,166,35,.08) 0%,transparent 70%);
+  pointer-events:none;
+}
+.coffee-emoji-wrap{
+  font-size:3.8rem;flex-shrink:0;
+  animation:coffeeFloat 4s ease-in-out infinite;
+}
+@keyframes coffeeFloat{
+  0%,100%{transform:translateY(0) rotate(-4deg)}
+  50%{transform:translateY(-7px) rotate(4deg)}
+}
+.coffee-content{flex:1}
+.coffee-eyebrow{
+  font-size:.63rem;font-weight:700;
+  letter-spacing:.12em;text-transform:uppercase;
+  color:var(--gold);opacity:.75;margin-bottom:5px;
+}
+.coffee-content h3{
+  font-size:clamp(1.05rem,2.4vw,1.35rem);
+  font-weight:800;margin-bottom:6px;color:var(--text);
 }
 
-.social-box h3 { font-size: 1.5rem; font-weight: 800; margin-bottom: 8px; }
-.social-box p  { font-size: 0.85rem; color: var(--muted); margin-bottom: 28px; }
-
-.social-btns { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
-
-.social-btn {
-  display: flex; align-items: center; gap: 9px;
-  padding: 11px 20px;
-  border-radius: 11px;
-  border: 1px solid var(--border2);
-  background: var(--surface);
-  font-size: 0.85rem; font-weight: 600;
-  transition: var(--trans);
-  cursor: pointer;
-  color: var(--text);
+/* Rotating messages — NEW */
+.coffee-rotate-wrap{
+  height:1.4em;overflow:hidden;margin-bottom:16px;
+  position:relative;
 }
-.social-btn:hover { transform: translateY(-3px); }
-
-/* Instagram */
-.social-btn.insta {
-  border-color: rgba(225,48,108,0.3);
+.coffee-rotate-msg{
+  position:absolute;top:0;left:0;
+  font-size:.82rem;color:var(--muted);line-height:1.4;
+  opacity:0;transform:translateY(8px);
+  transition:opacity .5s ease,transform .5s ease;
+  white-space:nowrap;
 }
-.social-btn.insta:hover {
-  background: linear-gradient(135deg,rgba(225,48,108,0.15),rgba(255,220,128,0.1));
-  border-color: rgba(225,48,108,0.6);
-  box-shadow: 0 6px 24px rgba(225,48,108,0.2);
-}
-.social-btn.insta .s-icon { font-size: 20px; }
-
-/* X / Twitter */
-.social-btn.twitter {
-  border-color: rgba(255,255,255,0.12);
-}
-.social-btn.twitter:hover {
-  background: rgba(255,255,255,0.07);
-  border-color: rgba(255,255,255,0.25);
-  box-shadow: 0 6px 24px rgba(255,255,255,0.08);
+.coffee-rotate-msg.active{
+  opacity:1;transform:translateY(0);
 }
 
-/* Telegram */
-.social-btn.telegram {
-  border-color: rgba(0,136,204,0.3);
+/* Trust badges row — NEW */
+.coffee-badges{
+  display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px;
 }
-.social-btn.telegram:hover {
-  background: rgba(0,136,204,0.12);
-  border-color: rgba(0,136,204,0.5);
-  box-shadow: 0 6px 24px rgba(0,136,204,0.2);
+.coffee-badge{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:4px 11px;border-radius:100px;
+  border:1px solid rgba(245,166,35,.18);
+  background:rgba(245,166,35,.07);
+  font-size:.68rem;font-weight:600;
+  color:rgba(245,166,35,.75);
 }
+.coffee-badge-check{color:var(--green);font-size:.7rem}
 
-/* ============================================
-   BUY ME A COFFEE — HERO CARD
-============================================ */
-.coffee-section {
-  padding: 0 20px 80px;
-  max-width: 960px;
-  margin: 0 auto;
+/* Pulse CTA — NEW subtle animation */
+@keyframes softPulse{
+  0%,100%{box-shadow:0 8px 28px rgba(245,166,35,.32)}
+  50%{box-shadow:0 8px 36px rgba(245,166,35,.5)}
 }
+.btn-coffee{
+  display:inline-flex;align-items:center;gap:9px;
+  padding:13px 26px;border-radius:12px;
+  background:linear-gradient(135deg,#f5a623,#e8920f);
+  color:#1a0800;font-size:.9rem;font-weight:800;
+  transition:var(--trans);
+  box-shadow:0 8px 28px rgba(245,166,35,.32);
+  letter-spacing:.01em;
+  animation:softPulse 3.5s ease-in-out infinite;
+}
+.btn-coffee:hover{
+  transform:translateY(-3px);
+  box-shadow:0 10px 38px rgba(245,166,35,.55);
+  filter:brightness(1.07);
+  animation:none;
+}
+.btn-coffee:active{transform:translateY(0)}
 
-.coffee-card {
-  background: linear-gradient(135deg, #1a0f00, #211400, #1a0f00);
-  border: 1px solid rgba(245,166,35,0.25);
-  border-radius: 20px;
-  padding: 36px;
-  display: flex; gap: 28px; align-items: center;
-  position: relative; overflow: hidden;
+/* ============================================================
+   CONNECT WITH US — ORIGINAL PRESERVED
+============================================================ */
+.social-section{
+  padding:0 20px 72px;
+  max-width:960px;margin:0 auto;
 }
+.social-box{
+  background:linear-gradient(145deg,var(--surface),var(--surface2));
+  border:1px solid var(--border);
+  border-radius:20px;padding:40px 36px;
+  text-align:center;position:relative;overflow:hidden;
+}
+.social-box::before{
+  content:'';
+  position:absolute;top:0;left:50%;transform:translateX(-50%);
+  width:280px;height:2px;
+  background:linear-gradient(90deg,transparent,var(--cyan),var(--violet),transparent);
+}
+.social-box h3{font-size:1.45rem;font-weight:800;margin-bottom:7px}
+.social-box p{font-size:.84rem;color:var(--muted);margin-bottom:26px}
+.social-btns{display:flex;flex-wrap:wrap;justify-content:center;gap:12px}
+.social-btn{
+  display:flex;align-items:center;gap:9px;
+  padding:11px 20px;border-radius:11px;
+  border:1px solid var(--border2);
+  background:var(--surface);
+  font-size:.84rem;font-weight:600;
+  transition:var(--trans);cursor:pointer;color:var(--text);
+}
+.social-btn:hover{transform:translateY(-3px)}
+.social-btn.insta{border-color:rgba(225,48,108,.25)}
+.social-btn.insta:hover{
+  background:linear-gradient(135deg,rgba(225,48,108,.13),rgba(255,220,128,.08));
+  border-color:rgba(225,48,108,.5);
+  box-shadow:0 5px 20px rgba(225,48,108,.18);
+}
+.social-btn.twitter{border-color:rgba(255,255,255,.1)}
+.social-btn.twitter:hover{
+  background:rgba(255,255,255,.06);
+  border-color:rgba(255,255,255,.22);
+}
+.social-btn.telegram{border-color:rgba(0,136,204,.25)}
+.social-btn.telegram:hover{
+  background:rgba(0,136,204,.1);
+  border-color:rgba(0,136,204,.45);
+  box-shadow:0 5px 20px rgba(0,136,204,.18);
+}
+.s-icon{font-size:20px}
 
-.coffee-card::before {
-  content: '';
-  position: absolute; top: 0; left: 0; right: 0; height: 2px;
-  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+/* ============================================================
+   SEO ARTICLE — ENHANCED
+============================================================ */
+.article-section{
+  padding:0 20px 60px;
+  max-width:860px;margin:0 auto;
 }
+.article-section h2{
+  font-size:1.25rem;font-weight:700;
+  margin-bottom:11px;margin-top:38px;
+  color:var(--cyan);letter-spacing:-.01em;
+}
+.article-section p{
+  font-size:.87rem;color:var(--muted);
+  line-height:1.88;margin-bottom:11px;
+}
+.article-section ul{
+  margin:10px 0 12px 18px;
+  font-size:.87rem;color:var(--muted);line-height:1.8;
+}
+.article-section ul li{margin-bottom:4px}
+.article-section ul li::marker{color:var(--cyan)}
 
-.coffee-glow {
-  position: absolute; right: -60px; top: -60px;
-  width: 220px; height: 220px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(245,166,35,0.18) 0%, transparent 70%);
-  pointer-events: none;
-}
-
-.coffee-emoji-wrap {
-  font-size: 4rem;
-  flex-shrink: 0;
-  animation: coffeeFloat 4s ease-in-out infinite;
-}
-@keyframes coffeeFloat {
-  0%,100% { transform: translateY(0) rotate(-5deg); }
-  50%      { transform: translateY(-8px) rotate(5deg); }
-}
-
-.coffee-content { flex: 1; }
-.coffee-eyebrow {
-  font-size: 0.65rem; font-weight: 700; letter-spacing: 0.12em;
-  text-transform: uppercase; color: var(--gold); opacity: 0.7;
-  margin-bottom: 6px;
-}
-.coffee-content h3 {
-  font-size: clamp(1.1rem, 2.5vw, 1.4rem);
-  font-weight: 800; margin-bottom: 8px;
-  color: var(--text);
-}
-.coffee-content p {
-  font-size: 0.82rem; color: var(--muted);
-  line-height: 1.6; margin-bottom: 20px;
-}
-
-.btn-coffee {
-  display: inline-flex; align-items: center; gap: 9px;
-  padding: 13px 26px;
-  border-radius: 12px;
-  background: linear-gradient(135deg, #f5a623, #e8920f);
-  color: #1a0800;
-  font-size: 0.9rem; font-weight: 800;
-  transition: var(--trans);
-  box-shadow: 0 0 0 0 rgba(245,166,35,0.4);
-  letter-spacing: 0.01em;
-}
-.btn-coffee:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 32px rgba(245,166,35,0.45);
-  filter: brightness(1.08);
-}
-.btn-coffee:active { transform: translateY(0); }
-
-/* ============================================
-   SEO ARTICLE
-============================================ */
-.article-section {
-  padding: 0 20px 60px;
-  max-width: 860px;
-  margin: 0 auto;
-}
-.article-section h2 {
-  font-size: 1.3rem; font-weight: 700; margin-bottom: 12px; margin-top: 40px;
-  color: var(--cyan);
-}
-.article-section p {
-  font-size: 0.88rem; color: var(--muted); line-height: 1.85; margin-bottom: 12px;
-}
-
-/* ============================================
+/* ============================================================
    FOOTER
-============================================ */
-footer {
-  border-top: 1px solid var(--border2);
-  padding: 36px 20px;
-  text-align: center;
+============================================================ */
+footer{
+  border-top:1px solid var(--border2);
+  padding:34px 20px;text-align:center;
 }
-
-.footer-inner { max-width: 960px; margin: 0 auto; }
-
-.footer-logo {
-  display: inline-flex; align-items: center; gap: 8px;
-  font-size: 1rem; font-weight: 800; margin-bottom: 16px;
+.footer-inner{max-width:960px;margin:0 auto}
+.footer-logo{
+  display:inline-flex;align-items:center;gap:8px;
+  font-size:.98rem;font-weight:800;margin-bottom:14px;
 }
-
-.footer-socials { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; }
-.fs-btn {
-  width: 38px; height: 38px;
-  border-radius: 9px;
-  border: 1px solid var(--border2);
-  background: var(--surface);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 16px;
-  transition: var(--trans);
-  cursor: pointer;
+.footer-socials{
+  display:flex;justify-content:center;gap:9px;margin-bottom:18px;
 }
-.fs-btn:hover { border-color: var(--cyan); background: var(--cyan-dim); transform: translateY(-2px); }
+.fs-btn{
+  width:37px;height:37px;border-radius:9px;
+  border:1px solid var(--border2);
+  background:var(--surface);
+  display:flex;align-items:center;justify-content:center;
+  font-size:15px;transition:var(--trans);
+  cursor:pointer;text-decoration:none;
+}
+.fs-btn:hover{border-color:var(--cyan);background:var(--cyan-dim);transform:translateY(-2px)}
+.footer-links{
+  display:flex;justify-content:center;gap:18px;
+  margin-bottom:14px;flex-wrap:wrap;
+}
+.footer-links a{font-size:.76rem;color:var(--dim);transition:var(--trans)}
+.footer-links a:hover{color:var(--cyan)}
+.footer-copy{font-size:.7rem;color:var(--dim)}
+.footer-copy span{color:var(--cyan)}
 
-.footer-links { display: flex; justify-content: center; gap: 20px; margin-bottom: 16px; flex-wrap: wrap; }
-.footer-links a { font-size: 0.78rem; color: var(--dim); transition: var(--trans); }
-.footer-links a:hover { color: var(--cyan); }
+/* ============================================================
+   SCROLL REVEAL
+============================================================ */
+.reveal{
+  opacity:0;transform:translateY(28px);
+  transition:opacity .6s ease,transform .6s ease;
+}
+.reveal.visible{opacity:1;transform:translateY(0)}
 
-.footer-copy { font-size: 0.72rem; color: var(--dim); }
-.footer-copy span { color: var(--cyan); }
-
-/* ============================================
+/* ============================================================
    RESPONSIVE
-============================================ */
-@media (max-width: 640px) {
-  .hero { padding: 40px 16px 30px; min-height: auto; padding-top: 50px; }
-  .coffee-card { flex-direction: column; align-items: flex-start; text-align: left; padding: 28px 22px; }
-  .coffee-emoji-wrap { font-size: 3rem; }
-  .btn-coffee-sm span { display: none; }
-  .social-box { padding: 28px 20px; }
-  .hero-stats { flex-direction: row; }
-  .hs-num { font-size: 1.1rem; }
-  .sec-header h2 { font-size: 1.4rem; }
+============================================================ */
+@media(max-width:640px){
+  .hero{padding:36px 16px 28px;min-height:auto}
+  .coffee-card{flex-direction:column;align-items:flex-start;padding:26px 20px}
+  .coffee-rotate-msg{white-space:normal}
+  .coffee-rotate-wrap{height:auto;min-height:2.8em}
+  .btn-coffee-sm span{display:none}
+  .social-box{padding:26px 18px}
+  .hero-stats{flex-direction:row}
+  .hs-num{font-size:1.1rem}
+  .aff-grid{grid-template-columns:1fr}
+  .promo-strip-inner{font-size:.72rem}
 }
-
-@media (max-width: 420px) {
-  .tool-grid { grid-template-columns: 1fr 1fr; }
-  .social-btns { gap: 8px; }
-  .social-btn { padding: 9px 14px; font-size: 0.8rem; }
+@media(max-width:420px){
+  .tool-grid{grid-template-columns:1fr 1fr}
+  .social-btns{gap:8px}
+  .social-btn{padding:9px 13px;font-size:.78rem}
 }
-
-@media (min-width: 900px) {
-  .tool-grid { grid-template-columns: repeat(4, 1fr); }
+@media(min-width:900px){
+  .tool-grid{grid-template-columns:repeat(4,1fr)}
+  .aff-grid{grid-template-columns:repeat(3,1fr)}
+}
+@media(min-width:600px) and (max-width:899px){
+  .aff-grid{grid-template-columns:repeat(2,1fr)}
 }
 </style>
 </head>
 <body>
 
 <!-- ===== AMBIENT BG ===== -->
-<div class="bg-canvas">
+<div class="bg-canvas" aria-hidden="true">
   <div class="bg-orb bg-orb-1"></div>
   <div class="bg-orb bg-orb-2"></div>
   <div class="bg-grid"></div>
@@ -726,34 +807,34 @@ footer {
 </div>
 
 <!-- ===== SIDEBAR OVERLAY ===== -->
-<div id="overlay"></div>
+<div id="overlay" aria-hidden="true"></div>
 
 <!-- ===== SIDEBAR ===== -->
-<nav id="sidebar">
+<nav id="sidebar" aria-label="Site navigation">
   <div class="sidebar-logo">
     <div class="logo-badge">TZ</div>
     Tools<span style="color:var(--cyan)">Zy</span>
   </div>
 
   <div class="sidebar-section">Navigation</div>
-  <div class="sidebar-link" onclick="go('index.html')"><span class="sl-icon">🏠</span> Home</div>
+  <div class="sidebar-link" onclick="go('index.html')"><span class="sl-icon">🏠</span>Home</div>
 
   <div class="sidebar-section">Loan Tools</div>
-  <div class="sidebar-link" onclick="go('emi.html')"><span class="sl-icon">🏦</span> EMI Calculator</div>
-  <div class="sidebar-link"><span class="sl-icon">📊</span> Loan Interest</div>
-  <div class="sidebar-link"><span class="sl-icon">💳</span> Flat Rate Loan</div>
+  <div class="sidebar-link" onclick="go('emi.html')"><span class="sl-icon">🏦</span>EMI Calculator</div>
+  <div class="sidebar-link"><span class="sl-icon">📊</span>Loan Interest</div>
+  <div class="sidebar-link"><span class="sl-icon">💳</span>Flat Rate Loan</div>
 
   <div class="sidebar-section">Savings Tools</div>
-  <div class="sidebar-link"><span class="sl-icon">📈</span> FD Calculator</div>
-  <div class="sidebar-link"><span class="sl-icon">💰</span> RD Calculator</div>
-  <div class="sidebar-link"><span class="sl-icon">🪙</span> Savings Interest</div>
+  <div class="sidebar-link"onclick="go('fd.html')"><span class="sl-icon">📈</span>FD Calculator</div>
+  <div class="sidebar-link"><span class="sl-icon">💰</span>RD Calculator</div>
+  <div class="sidebar-link"><span class="sl-icon">🪙</span>Savings Interest</div>
 
   <div class="sidebar-section">Life Tools</div>
-  <div class="sidebar-link" onclick="go('age.html')"><span class="sl-icon">🎂</span> Age Calculator</div>
-  <div class="sidebar-link" onclick="go('countdown.html')"><span class="sl-icon">⏳</span> Birthday Countdown</div>
-  <div class="sidebar-link"><span class="sl-icon">🪐</span> Age on Planets</div>
-  <div class="sidebar-link" onclick="go('discount.html')"><span class="sl-icon">🏷️</span> Discount Calculator</div>
-  <div class="sidebar-link"><span class="sl-icon">%</span> Percentage Calc</div>
+  <div class="sidebar-link" onclick="go('age.html')"><span class="sl-icon">🎂</span>Age Calculator</div>
+  <div class="sidebar-link" onclick="go('countdown.html')"><span class="sl-icon">⏳</span>Birthday Countdown</div>
+  <div class="sidebar-link"><span class="sl-icon">🪐</span>Age on Planets</div>
+  <div class="sidebar-link" onclick="go('discount.html')"><span class="sl-icon">🏷️</span>Discount Calculator</div>
+  <div class="sidebar-link"><span class="sl-icon">%</span>Percentage Calculator</div>
 
   <div class="sidebar-social">
     <p>Connect with us</p>
@@ -768,17 +849,15 @@ footer {
 
 <!-- ===== HEADER ===== -->
 <header>
-  <button id="hamburger" aria-label="Menu">
+  <button id="hamburger" aria-label="Toggle navigation menu">
     <span class="h-line"></span>
     <span class="h-line"></span>
     <span class="h-line"></span>
   </button>
-
   <div class="logo">
     <div class="logo-badge">TZ</div>
     <div class="logo-text">Tools<span>Zy</span></div>
   </div>
-
   <div class="header-right">
     <a href="https://buymeacoffee.com/toolszy" target="_blank" rel="noopener" class="btn-coffee-sm">
       ☕ <span>Support Us</span>
@@ -786,30 +865,48 @@ footer {
   </div>
 </header>
 
+<!-- ===== PROMO STRIP — NEW ===== -->
+<div class="promo-strip" role="complementary">
+  <div class="promo-strip-inner">
+    <span class="promo-pill">⚡ New</span>
+    <span class="promo-strip-text">Save more with smarter tools — explore the best financial options available today</span>
+    <a href="#financial-options">See Options →</a>
+  </div>
+</div>
+
 <!-- ===== MAIN WRAP ===== -->
 <div class="wrap">
 
   <!-- HERO -->
   <section class="hero">
-    <div class="hero-badge"><span class="badge-dot"></span> 10+ Tools · Always Free</div>
+    <div class="hero-badge"><span class="badge-dot"></span>Used by 10,000+ users · Always Free</div>
     <h1 class="hero-title">
       Calculators that<br>
       <span class="line2">actually work</span>
     </h1>
-    <p class="hero-sub">No sign-up. No ads. No fluff. Just fast, accurate results for every calculation you need in daily life.</p>
+    <p class="hero-sub">No sign-up. No ads. No fluff. Fast, accurate results for every calculation you need in daily life.</p>
+
+    <!-- Trust micro-tags — NEW -->
+    <div class="hero-trust-tags">
+      <span class="trust-micro"><span class="tm-dot"></span>Private &amp; Secure</span>
+      <span class="trust-micro"><span class="tm-dot"></span>No Data Stored</span>
+      <span class="trust-micro"><span class="tm-dot"></span>Instant Calculation</span>
+      <span class="trust-micro"><span class="tm-dot"></span>Built Independently</span>
+    </div>
+
     <div class="hero-tags">
       <span class="hero-tag">✔ 100% Free</span>
       <span class="hero-tag">✔ Mobile Friendly</span>
-      <span class="hero-tag">✔ Instant Results</span>
       <span class="hero-tag">✔ No Sign-Up</span>
+      <span class="hero-tag">✔ Works Offline</span>
     </div>
     <div class="hero-ctas">
       <button class="btn-primary" onclick="document.getElementById('toolGrid').scrollIntoView({behavior:'smooth'})">Explore All Tools ↓</button>
       <a href="emi.html" class="btn-outline">Try EMI Calculator →</a>
     </div>
     <div class="hero-stats">
-      <div class="hs-item"><div class="hs-num">10+</div><div class="hs-lbl">Tools</div></div>
-      <div class="hs-item"><div class="hs-num">100%</div><div class="hs-lbl">Accurate</div></div>
+      <div class="hs-item"><div class="hs-num">10+</div><div class="hs-lbl">Free Tools</div></div>
+      <div class="hs-item"><div class="hs-num">10K+</div><div class="hs-lbl">Users</div></div>
       <div class="hs-item"><div class="hs-num">0</div><div class="hs-lbl">Ads</div></div>
       <div class="hs-item"><div class="hs-num">Free</div><div class="hs-lbl">Forever</div></div>
     </div>
@@ -819,99 +916,237 @@ footer {
   <section class="tools-section reveal" id="toolGrid">
     <div class="sec-header">
       <h2>All Smart Tools</h2>
-      <p>Tap any tool to get your answer in seconds</p>
+      <p>Trusted by students, professionals & smart planners across India</p>
+            <p2>Tap any tool — get your answer in seconds</p2>
     </div>
     <div class="tool-grid">
-
       <div class="tool-card" onclick="go('age.html')">
         <div class="tc-icon ic-gold">🎂</div>
         <div class="tc-name">Age Calculator</div>
-        <div class="tc-desc">Exact age in years, months & days</div>
+        <div class="tc-desc">Exact age in years, months &amp; days</div>
         <span class="tc-arrow">↗</span>
       </div>
-
       <div class="tool-card" onclick="go('countdown.html')">
         <div class="tc-icon ic-violet">⏳</div>
         <div class="tc-name">Birthday Countdown</div>
         <div class="tc-desc">Live countdown to your big day</div>
         <span class="tc-arrow">↗</span>
       </div>
-
       <div class="tool-card">
         <div class="tc-icon ic-violet">🪐</div>
         <div class="tc-name">Age on Planets</div>
-        <div class="tc-desc">How old are you on other planets?</div>
+        <div class="tc-desc">How old are you on other worlds?</div>
         <span class="tc-arrow">↗</span>
       </div>
-
       <div class="tool-card" onclick="go('emi.html')">
         <div class="tc-icon ic-cyan">🏦</div>
         <div class="tc-name">EMI Calculator</div>
-        <div class="tc-desc">Monthly instalment & loan breakup</div>
+        <div class="tc-desc">Monthly instalment &amp; loan breakup</div>
         <span class="tc-arrow">↗</span>
       </div>
-
-      <div class="tool-card">
+      <div class="tool-card" onclick="go('fd.html')">
         <div class="tc-icon ic-cyan">📈</div>
         <div class="tc-name">FD Calculator</div>
-        <div class="tc-desc">Fixed deposit maturity & interest</div>
+        <div class="tc-desc">Fixed deposit maturity &amp; interest</div>
         <span class="tc-arrow">↗</span>
       </div>
-
       <div class="tool-card">
         <div class="tc-icon ic-cyan">💰</div>
         <div class="tc-name">RD Calculator</div>
         <div class="tc-desc">Recurring deposit maturity value</div>
         <span class="tc-arrow">↗</span>
       </div>
-
       <div class="tool-card" onclick="go('discount.html')">
         <div class="tc-icon ic-gold">🏷️</div>
         <div class="tc-name">Discount Calculator</div>
-        <div class="tc-desc">Final price & savings on any deal</div>
+        <div class="tc-desc">Final price &amp; savings on any deal</div>
         <span class="tc-arrow">↗</span>
       </div>
-
       <div class="tool-card">
         <div class="tc-icon ic-gold">%</div>
         <div class="tc-name">Percentage Calc</div>
         <div class="tc-desc">Fast percentage of any number</div>
         <span class="tc-arrow">↗</span>
       </div>
-
       <div class="tool-card">
         <div class="tc-icon ic-cyan">📊</div>
         <div class="tc-name">Loan Interest</div>
-        <div class="tc-desc">Simple & compound loan interest</div>
+        <div class="tc-desc">Simple &amp; compound loan interest</div>
         <span class="tc-arrow">↗</span>
       </div>
-
-      <div class="tool-card">
+      <div class="tool-card" onclick="go('flat.html')">
         <div class="tc-icon ic-violet">💳</div>
         <div class="tc-name">Flat Rate Loan</div>
         <div class="tc-desc">Flat-rate vs reducing interest</div>
         <span class="tc-arrow">↗</span>
       </div>
-
       <div class="tool-card">
         <div class="tc-icon ic-cyan">🪙</div>
         <div class="tc-name">Savings Interest</div>
         <div class="tc-desc">Interest earned on your savings</div>
         <span class="tc-arrow">↗</span>
       </div>
-
     </div>
   </section>
 
-  <!-- BUY ME A COFFEE -->
+  <!-- ===== AFFILIATE: LOAN OPTIONS — NEW ===== -->
+  <section class="aff-section reveal" id="financial-options">
+    <div class="aff-header">
+      <h3>🏦 Best Loan Options Right Now</h3>
+      <span class="aff-header-note">Based on popular EMI calculations</span>
+    </div>
+    <div class="aff-grid">
+      <div class="aff-card">
+        <div class="aff-card-top">
+          <div class="aff-logo">🏛️</div>
+          <div>
+            <div class="aff-name">HDFC Bank Loan</div>
+            <div class="aff-rate">From 10.50% p.a.</div>
+          </div>
+        </div>
+        <div class="aff-benefit">Instant approval, minimal docs. Up to ₹40L for salaried individuals. Check eligibility in 2 minutes.</div>
+        <a href="#" target="_blank" rel="noopener sponsored" class="btn-aff">Check Offer →</a>
+      </div>
+      <div class="aff-card">
+        <div class="aff-card-top">
+          <div class="aff-logo">📱</div>
+          <div>
+            <div class="aff-name">MoneyTap Personal Loan</div>
+            <div class="aff-rate">From 13% p.a.</div>
+          </div>
+        </div>
+        <div class="aff-benefit">100% online. Use only what you need — pay interest only on the amount used. No prepayment penalty.</div>
+        <a href="#" target="_blank" rel="noopener sponsored" class="btn-aff">Check Offer →</a>
+      </div>
+      <div class="aff-card">
+        <div class="aff-card-top">
+          <div class="aff-logo">⚡</div>
+          <div>
+            <div class="aff-name">KreditBee Instant Loan</div>
+            <div class="aff-rate">From 17% p.a.</div>
+          </div>
+        </div>
+        <div class="aff-benefit">Approval in 15 minutes. Ideal for urgent needs. ₹1,000 to ₹5L. Safe, RBI-registered lender.</div>
+        <a href="#" target="_blank" rel="noopener sponsored" class="btn-aff">Check Offer →</a>
+      </div>
+    </div>
+    <div class="aff-disclaimer">We may earn a small commission at no extra cost to you. All products are independently reviewed.</div>
+  </section>
+
+  <!-- ===== AFFILIATE: SAVINGS / FD OPTIONS — NEW ===== -->
+  <section class="aff-section reveal">
+    <div class="aff-header">
+      <h3>📈 Top Savings &amp; Investment Options</h3>
+      <span class="aff-header-note">For FD, RD &amp; savings planners</span>
+    </div>
+    <div class="aff-grid">
+      <div class="aff-card">
+        <div class="aff-card-top">
+          <div class="aff-logo">🏦</div>
+          <div>
+            <div class="aff-name">SBI Fixed Deposit</div>
+            <div class="aff-rate">Up to 7.10% p.a.</div>
+          </div>
+        </div>
+        <div class="aff-benefit">Government-backed. Safe &amp; reliable. Flexible tenures from 7 days to 10 years. Senior citizen bonus rates.</div>
+        <a href="#" target="_blank" rel="noopener sponsored" class="btn-aff">See FD Rates →</a>
+      </div>
+      <div class="aff-card">
+        <div class="aff-card-top">
+          <div class="aff-logo">📊</div>
+          <div>
+            <div class="aff-name">Groww Mutual Funds</div>
+            <div class="aff-rate">12–18% avg. returns</div>
+          </div>
+        </div>
+        <div class="aff-benefit">Start a SIP with just ₹100/month. Potentially higher returns than FD. Fully digital. No hidden charges.</div>
+        <a href="#" target="_blank" rel="noopener sponsored" class="btn-aff">Start Investing →</a>
+      </div>
+      <div class="aff-card">
+        <div class="aff-card-top">
+          <div class="aff-logo">💎</div>
+          <div>
+            <div class="aff-name">Bajaj Finance FD</div>
+            <div class="aff-rate">Up to 8.60% p.a.</div>
+          </div>
+        </div>
+        <div class="aff-benefit">One of India's highest non-bank FD rates. CRISIL AAA rated. Fully secure. Easy online booking in minutes.</div>
+        <a href="#" target="_blank" rel="noopener sponsored" class="btn-aff">Book FD →</a>
+      </div>
+    </div>
+    <div class="aff-disclaimer">We may earn a small commission at no extra cost to you. Rates are indicative — check issuer website for current rates.</div>
+  </section>
+
+  <!-- ===== AFFILIATE: SHOPPING DEALS — NEW ===== -->
+  <section class="aff-section reveal">
+    <div class="aff-header">
+      <h3>🛍️ Best Shopping Deals to Explore</h3>
+      <span class="aff-header-note">Maximise your discount calculations</span>
+    </div>
+    <div class="aff-grid">
+      <div class="aff-card shop">
+        <div class="aff-card-top">
+          <div class="aff-logo">🛒</div>
+          <div>
+            <div class="aff-name">Amazon India</div>
+            <div class="aff-rate">Up to 70% off today</div>
+          </div>
+        </div>
+        <div class="aff-benefit">Millions of products with daily deals. Use our Discount Calculator to verify savings before buying.</div>
+        <a href="https://amazon.in" target="_blank" rel="noopener sponsored" class="btn-aff" style="background:var(--gold-dim);border-color:rgba(245,166,35,.25);color:var(--gold)">Shop Now →</a>
+      </div>
+      <div class="aff-card shop">
+        <div class="aff-card-top">
+          <div class="aff-logo">🔵</div>
+          <div>
+            <div class="aff-name">Flipkart</div>
+            <div class="aff-rate">Big Billion Savings</div>
+          </div>
+        </div>
+        <div class="aff-benefit">Electronics, fashion, home &amp; more. Exclusive bank card offers for additional 10% off. Fast delivery.</div>
+        <a href="https://flipkart.com" target="_blank" rel="noopener sponsored" class="btn-aff" style="background:var(--gold-dim);border-color:rgba(245,166,35,.25);color:var(--gold)">Shop Now →</a>
+      </div>
+      <div class="aff-card shop">
+        <div class="aff-card-top">
+          <div class="aff-logo">🩷</div>
+          <div>
+            <div class="aff-name">Meesho</div>
+            <div class="aff-rate">Starting ₹99</div>
+          </div>
+        </div>
+        <div class="aff-benefit">Affordable fashion, home &amp; lifestyle products. Free delivery on thousands of items. Perfect for everyday needs.</div>
+        <a href="https://meesho.com" target="_blank" rel="noopener sponsored" class="btn-aff" style="background:var(--gold-dim);border-color:rgba(245,166,35,.25);color:var(--gold)">Shop Now →</a>
+      </div>
+    </div>
+    <div class="aff-disclaimer">We may earn a small commission at no extra cost to you when you shop via these links.</div>
+  </section>
+
+  <!-- ===== PREMIUM SUPPORT / COFFEE SECTION — FULLY UPGRADED ===== -->
   <section class="coffee-section reveal">
     <div class="coffee-card">
       <div class="coffee-glow"></div>
+      <div class="coffee-glow-left"></div>
       <div class="coffee-emoji-wrap">☕</div>
       <div class="coffee-content">
-        <div class="coffee-eyebrow">Support ToolsZy</div>
-        <h3>Love using ToolsZy?<br>Buy us a coffee!</h3>
-        <p>ToolsZy is built with ❤️ and kept completely free. If these tools help you, consider supporting us — even a small amount keeps the lights on and new tools coming!</p>
+        <div class="coffee-eyebrow">Support the Developer</div>
+        <h3>Help keep ToolsZy fast,<br>free &amp; growing 🚀</h3>
+
+        <!-- Rotating messages — JS-powered, lightweight -->
+        <div class="coffee-rotate-wrap" id="coffeeRotate">
+          <div class="coffee-rotate-msg active">No ads. No sign-ups. Just pure tools — kept alive by your support.</div>
+          <div class="coffee-rotate-msg">If this saved your time, you can support the project ☕</div>
+          <div class="coffee-rotate-msg">Your support covers hosting, domain &amp; future tools.</div>
+          <div class="coffee-rotate-msg">Built independently, maintained with love. Every coffee counts!</div>
+        </div>
+
+        <!-- Trust badges -->
+        <div class="coffee-badges">
+          <span class="coffee-badge"><span class="coffee-badge-check">✔</span> 100% Free</span>
+          <span class="coffee-badge"><span class="coffee-badge-check">✔</span> No Ads</span>
+          <span class="coffee-badge"><span class="coffee-badge-check">✔</span> No Tracking</span>
+          <span class="coffee-badge"><span class="coffee-badge-check">✔</span> Built Independently</span>
+        </div>
+
         <a href="https://buymeacoffee.com/toolszy" target="_blank" rel="noopener" class="btn-coffee">
           ☕ Buy Me a Coffee
         </a>
@@ -919,50 +1154,60 @@ footer {
     </div>
   </section>
 
-  <!-- CONNECT WITH US -->
+  <!-- ===== CONNECT WITH US ===== -->
   <section class="social-section reveal">
     <div class="social-box">
       <h3>Connect With Us</h3>
-      <p>Follow ToolsZy for updates, new tools, tips & more. We're on all your favourite platforms!</p>
+      <p>Follow ToolsZy for updates, new tools &amp; tips. We're on all your favourite platforms!</p>
       <div class="social-btns">
-
-        <!-- Instagram -->
         <a href="https://instagram.com/toolszy" target="_blank" rel="noopener" class="social-btn insta">
-          <span class="s-icon">📸</span>
-          <span>Instagram</span>
+          <span class="s-icon">📸</span><span>Instagram</span>
         </a>
-
-        <!-- X / Twitter -->
         <a href="https://x.com/toolszy" target="_blank" rel="noopener" class="social-btn twitter">
-          <span style="font-size:18px;font-weight:900;line-height:1">𝕏</span>
-          <span>Twitter / X</span>
+          <span style="font-size:17px;font-weight:900;line-height:1">𝕏</span><span>Twitter / X</span>
         </a>
-
-        <!-- Telegram -->
         <a href="https://t.me/toolszy" target="_blank" rel="noopener" class="social-btn telegram">
-          <span style="font-size:18px">✈️</span>
-          <span>Telegram</span>
+          <span style="font-size:18px">✈️</span><span>Telegram</span>
         </a>
-
       </div>
     </div>
   </section>
 
-  <!-- SEO ARTICLE -->
-  <section class="article-section reveal">
+  <!-- ===== SEO ARTICLE — ENHANCED ===== -->
+  <article class="article-section reveal" itemscope itemtype="https://schema.org/Article">
+
     <h2>All-in-One Smart Calculation Platform</h2>
-    <p>ToolsZy is built to simplify everyday digital calculations through a clean, modern and powerful interface. Instead of switching between multiple websites, users can access essential utilities like age calculator, birthday countdown, EMI planning tools, savings interest calculators and more in one single place.</p>
+    <p>ToolsZy is built to simplify everyday digital calculations through a clean, modern and powerful interface. Instead of switching between multiple websites for different tools, users can access essential utilities — age calculator, birthday countdown, EMI planning, savings interest calculators and more — in one single place.</p>
     <p>The platform focuses on speed, clarity and real-world usefulness. Each tool is designed after careful planning so that users can quickly get results without confusion. Whether you want to calculate your exact age, plan financial goals or evaluate discounts while shopping, ToolsZy helps you make smarter decisions.</p>
 
+    <h2>Why ToolsZy Is Different</h2>
+    <p>Unlike typical calculator websites cluttered with pop-ups and forced registrations, ToolsZy was built from the ground up around one principle: the user comes first. No data is collected, no session is tracked, and no account is ever required. Everything runs directly in your browser — fast, private and offline-capable.</p>
+    <p>The interface is designed to feel as premium as the tools you use daily — clean typography, smooth micro-interactions and a layout that works beautifully on both a phone screen and a large desktop monitor.</p>
+
+    <h2>Who Should Use These Tools</h2>
+    <p>ToolsZy is built for real people in real situations:</p>
+    <ul>
+      <li><strong>Students &amp; job-seekers</strong> verifying age and calculating application deadlines</li>
+      <li><strong>Home buyers</strong> estimating EMI before approaching a bank</li>
+      <li><strong>Savers &amp; investors</strong> comparing FD and RD returns across tenures</li>
+      <li><strong>Shoppers</strong> verifying discounts and final prices before checkout</li>
+      <li><strong>Parents &amp; planners</strong> counting down to birthdays and anniversaries</li>
+    </ul>
+
+    <h2>How It Helps in Real Life</h2>
+    <p>Before taking a home loan, most people have no idea what their monthly outflow will look like. ToolsZy's EMI calculator shows you the exact monthly payment, total interest paid over the loan period and the complete amortisation schedule — all before you walk into a bank.</p>
+    <p>Similarly, when planning savings, the FD and RD calculators help you see how even modest monthly deposits grow significantly over time through the power of compounding — a concept that's hard to grasp mentally but instantly clear when you see the numbers.</p>
+
     <h2>Completely Free Experience</h2>
-    <p>Every calculator available on ToolsZy is 100% free to use. There are no hidden subscriptions, no forced sign-ups and no disturbing advertisement pop-ups. The experience is built to remain smooth and distraction-free so users can focus only on results.</p>
+    <p>Every calculator on ToolsZy is 100% free to use. There are no hidden subscriptions, no forced sign-ups and no intrusive ads. The experience is built to remain smooth and distraction-free so users can focus only on their results.</p>
 
-    <h2>Modern Interface & Smooth Performance</h2>
-    <p>The design philosophy of ToolsZy is based on minimalism combined with smooth animations and responsive layouts. The interface automatically adapts to different screen sizes so the same premium experience can be enjoyed on mobile, tablet and desktop devices.</p>
+    <h2>Modern Interface &amp; Smooth Performance</h2>
+    <p>The design philosophy of ToolsZy is based on purposeful minimalism combined with smooth animations and responsive layouts. The interface automatically adapts to different screen sizes so the same premium experience is available on mobile, tablet and desktop devices without compromise.</p>
 
-    <h2>Future Expansion</h2>
-    <p>ToolsZy aims to become a complete digital calculation hub. More advanced tools such as loan interest planners, investment estimators, savings growth trackers and productivity utilities will continue to be added. The goal is to build a trusted smart platform where users can calculate, plan and grow with confidence.</p>
-  </section>
+    <h2>Future Expansion Vision</h2>
+    <p>ToolsZy aims to become a complete digital calculation hub. More advanced tools — loan interest planners, investment estimators, savings growth trackers and productivity utilities — will continue to be added. The goal is a trusted smart platform where users can calculate, plan and grow with confidence.</p>
+
+  </article>
 
   <!-- FOOTER -->
   <footer>
@@ -973,49 +1218,75 @@ footer {
       </div>
       <div class="footer-socials">
         <a href="https://instagram.com/toolszy" target="_blank" rel="noopener" class="fs-btn" title="Instagram">📸</a>
-        <a href="https://x.com/toolszy" target="_blank" rel="noopener" class="fs-btn" title="X">𝕏</a>
+        <a href="https://x.com/toolszy" target="_blank" rel="noopener" class="fs-btn" title="X / Twitter">𝕏</a>
         <a href="https://t.me/toolszy" target="_blank" rel="noopener" class="fs-btn" title="Telegram">✈️</a>
-        <a href="https://buymeacoffee.com/toolszy" target="_blank" rel="noopener" class="fs-btn" title="Coffee">☕</a>
+        <a href="https://buymeacoffee.com/toolszy" target="_blank" rel="noopener" class="fs-btn" title="Support">☕</a>
       </div>
       <div class="footer-links">
-        <a href="#">Privacy</a>
+        <a href="#">Privacy Policy</a>
         <a href="#">About</a>
         <a href="#">Contact</a>
         <a href="#">Sitemap</a>
+        <a href="#">Disclaimer</a>
       </div>
-      <div class="footer-copy">© 2026 <span>ToolsZy</span> · Made with ❤️ · Free Forever</div>
+      <div class="footer-copy">© 2026 <span>ToolsZy</span> · Made with ❤️ India · Free Forever · No Data Stored</div>
     </div>
   </footer>
 
 </div><!-- .wrap -->
 
 <script>
-/* ===== MENU ===== */
+/* ============================================================
+   MENU SYSTEM
+============================================================ */
 const hamburger = document.getElementById('hamburger');
 const sidebar   = document.getElementById('sidebar');
 const overlay   = document.getElementById('overlay');
 
 hamburger.addEventListener('click', () => document.body.classList.toggle('open'));
 overlay.addEventListener('click', closeMenu);
-document.addEventListener('keydown', e => { if(e.key==='Escape') closeMenu(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMenu(); });
 
 function closeMenu() { document.body.classList.remove('open'); }
 
-/* ===== NAVIGATION ===== */
+/* ============================================================
+   NAVIGATION
+============================================================ */
 function go(page) { window.location.href = page; }
 
-/* ===== SCROLL REVEAL ===== */
-const reveals = document.querySelectorAll('.reveal');
+/* ============================================================
+   SCROLL REVEAL — IntersectionObserver, no scroll event
+============================================================ */
 const ro = new IntersectionObserver((entries) => {
-  entries.forEach(e => { if(e.isIntersecting) { e.target.classList.add('visible'); ro.unobserve(e.target); } });
-}, { threshold: 0.08 });
-reveals.forEach(r => ro.observe(r));
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      ro.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.07 });
 
-/* ===== PAGE ENTER ===== */
-document.body.style.opacity = '0';
-document.body.style.transition = 'opacity 0.5s ease';
+document.querySelectorAll('.reveal').forEach(el => ro.observe(el));
+
+/* ============================================================
+   COFFEE ROTATING MESSAGES — Lightweight CSS transitions
+============================================================ */
+(function initCoffeeRotate() {
+  const msgs = document.querySelectorAll('.coffee-rotate-msg');
+  if (!msgs.length) return;
+  let current = 0;
+  setInterval(() => {
+    msgs[current].classList.remove('active');
+    current = (current + 1) % msgs.length;
+    msgs[current].classList.add('active');
+  }, 3200);
+})();
+
+/* ============================================================
+   PAGE LOAD — single rAF, no timeout jank
+============================================================ */
 window.addEventListener('load', () => {
-  requestAnimationFrame(() => { document.body.style.opacity = '1'; });
+  requestAnimationFrame(() => document.body.classList.add('loaded'));
 });
 </script>
 </body>
